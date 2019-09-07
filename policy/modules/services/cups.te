@@ -622,6 +622,7 @@ allow hplip_t self:tcp_socket { accept listen };
 allow hplip_t self:rawip_socket create_socket_perms;
 
 allow hplip_t hplip_devpts_t:chr_file { rw_chr_file_perms setattr_chr_file_perms };
+term_create_pty(hplip_t, hplip_devpts_t)
 
 allow hplip_t cupsd_etc_t:dir search_dir_perms;
 
@@ -699,9 +700,7 @@ miscfiles_read_localization(hplip_t)
 
 sysnet_dns_name_resolve(hplip_t)
 
-term_create_pty(hplip_t, hplip_devpts_t)
 term_use_generic_ptys(hplip_t)
-term_use_ptmx(hplip_t)
 
 userdom_dontaudit_use_unpriv_user_fds(hplip_t)
 userdom_dontaudit_search_user_home_dirs(hplip_t)

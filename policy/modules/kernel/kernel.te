@@ -50,6 +50,9 @@ domain_base_type(kernel_t)
 role system_r types kernel_t;
 sid kernel gen_context(system_u:system_r:kernel_t,mls_systemhigh)
 
+type kernel_pty_t;
+term_pty(kernel_pty_t)
+
 #
 # DebugFS
 #
@@ -219,6 +222,9 @@ allow kernel_t self:fd use;
 
 allow kernel_t debugfs_t:dir search_dir_perms;
 
+allow kernel_t kernel_pty_t:chr_file rw_term_perms;
+term_create_pty(kernel_t, kernel_pty_t)
+
 allow kernel_t proc_t:dir list_dir_perms;
 allow kernel_t proc_t:file read_file_perms;
 allow kernel_t proc_t:lnk_file read_lnk_file_perms;
@@ -306,9 +312,7 @@ mls_process_set_level(kernel_t)
 selinux_getattr_fs(kernel_t)
 selinux_load_policy(kernel_t)
 
-term_getattr_pty_fs(kernel_t)
 term_use_console(kernel_t)
-term_use_generic_ptys(kernel_t)
 
 # for kdevtmpfs
 term_setattr_unlink_unallocated_ttys(kernel_t)
@@ -404,7 +408,6 @@ optional_policy(`
 	plymouthd_read_spool_files(kernel_t)
 	plymouthd_rw_lib_files(kernel_t)
 
-	term_use_ptmx(kernel_t)
 	term_use_unallocated_ttys(kernel_t)
 ')
 

@@ -35,6 +35,9 @@ rhcs_domain_template(fenced)
 type fenced_lock_t;
 files_lock_file(fenced_lock_t)
 
+type fenced_pty_t;
+term_pty(fenced_pty_t)
+
 type fenced_tmp_t;
 files_tmp_file(fenced_tmp_t)
 
@@ -120,6 +123,9 @@ stream_connect_pattern(fenced_t, groupd_var_run_t, groupd_var_run_t, groupd_t)
 
 can_exec(fenced_t, fenced_exec_t)
 
+allow fenced_t fenced_pty_t:chr_file rw_term_perms;
+term_create_pty(fenced_t, fenced_pty_t)
+
 kernel_read_system_state(fenced_t)
 
 corecmd_exec_bin(fenced_t)
@@ -155,10 +161,6 @@ files_read_usr_symlinks(fenced_t)
 storage_raw_read_fixed_disk(fenced_t)
 storage_raw_write_fixed_disk(fenced_t)
 storage_raw_read_removable_device(fenced_t)
-
-term_getattr_pty_fs(fenced_t)
-term_use_generic_ptys(fenced_t)
-term_use_ptmx(fenced_t)
 
 auth_use_nsswitch(fenced_t)
 

@@ -13,6 +13,9 @@ type ptchown_exec_t;
 application_domain(ptchown_t, ptchown_exec_t)
 role ptchown_roles types ptchown_t;
 
+type ptchown_pty_t;
+term_pty(ptchown_pty_t)
+
 ########################################
 #
 # Local policy
@@ -21,14 +24,14 @@ role ptchown_roles types ptchown_t;
 allow ptchown_t self:capability { chown fowner fsetid setuid };
 allow ptchown_t self:process { getcap setcap };
 
+allow ptchown_t ptchown_pty_t:chr_file { rw_term_perms setattr };
+term_create_pty(ptchown_t, ptchown_pty_t)
+
 files_read_etc_files(ptchown_t)
 
 fs_rw_anon_inodefs_files(ptchown_t)
 
-term_setattr_generic_ptys(ptchown_t)
 term_getattr_all_ptys(ptchown_t)
 term_setattr_all_ptys(ptchown_t)
-term_use_generic_ptys(ptchown_t)
-term_use_ptmx(ptchown_t)
 
 miscfiles_read_localization(ptchown_t)

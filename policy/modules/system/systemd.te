@@ -143,6 +143,9 @@ type systemd_nspawn_exec_t;
 init_system_domain(systemd_nspawn_t, systemd_nspawn_exec_t)
 mcs_killall(systemd_nspawn_t)
 
+type systemd_nspawn_pty_t;
+term_pty(systemd_nspawn_pty_t);
+
 type systemd_nspawn_var_run_t;
 files_pid_file(systemd_nspawn_var_run_t)
 
@@ -735,6 +738,9 @@ allow systemd_nspawn_t systemd_journal_t:dir search;
 
 allow systemd_nspawn_t systemd_machined_t:dbus send_msg;
 
+allow systemd_nspawn_t systemd_nspawn_pty_t:chr_file { rw_term_perms setattr };
+term_create_pty(systemd_nspawn_t, systemd_nspawn_pty_t)
+
 allow systemd_nspawn_t systemd_nspawn_var_run_t:dir manage_dir_perms;
 allow systemd_nspawn_t systemd_nspawn_var_run_t:file manage_file_perms;
 init_pid_filetrans(systemd_nspawn_t, systemd_nspawn_var_run_t, dir)
@@ -787,11 +793,7 @@ fs_remount_xattr_fs(systemd_nspawn_t)
 fs_read_cgroup_files(systemd_nspawn_t)
 
 term_getattr_generic_ptys(systemd_nspawn_t)
-term_getattr_pty_fs(systemd_nspawn_t)
 term_mount_devpts(systemd_nspawn_t)
-term_search_ptys(systemd_nspawn_t)
-term_setattr_generic_ptys(systemd_nspawn_t)
-term_use_ptmx(systemd_nspawn_t)
 
 init_domtrans_script(systemd_nspawn_t)
 init_getrlimit(systemd_nspawn_t)

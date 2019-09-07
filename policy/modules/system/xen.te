@@ -189,6 +189,9 @@ fs_hugetlbfs_filetrans(xend_t, xen_image_t, file)
 allow xend_t xenctl_t:fifo_file manage_fifo_file_perms;
 dev_filetrans(xend_t, xenctl_t, fifo_file)
 
+allow xend_t xen_devpts_t:chr_file { rw_term_perms setattr };
+term_create_pty(xend_t, xen_devpts_t)
+
 manage_files_pattern(xend_t, xend_tmp_t, xend_tmp_t)
 manage_dirs_pattern(xend_t, xend_tmp_t, xend_tmp_t)
 files_tmp_filetrans(xend_t, xend_tmp_t, { file dir })
@@ -288,12 +291,8 @@ storage_read_scsi_generic(xend_t)
 # for lsscsi
 storage_getattr_fixed_disk_dev(xend_t)
 
-term_setattr_generic_ptys(xend_t)
 term_getattr_all_ptys(xend_t)
 term_setattr_all_ptys(xend_t)
-term_use_generic_ptys(xend_t)
-term_use_ptmx(xend_t)
-term_getattr_pty_fs(xend_t)
 
 init_stream_connect_script(xend_t)
 
@@ -372,6 +371,7 @@ allow xenconsoled_t self:unix_stream_socket create_stream_socket_perms;
 allow xenconsoled_t self:fifo_file rw_fifo_file_perms;
 
 allow xenconsoled_t xen_devpts_t:chr_file { rw_term_perms setattr_chr_file_perms };
+term_create_pty(xenconsoled_t, xen_devpts_t)
 
 manage_dirs_pattern(xenconsoled_t, xend_var_log_t, xend_var_log_t)
 append_files_pattern(xenconsoled_t, xend_var_log_t, xend_var_log_t)
@@ -399,8 +399,6 @@ fs_list_tmpfs(xenconsoled_t)
 fs_manage_xenfs_dirs(xenconsoled_t)
 fs_manage_xenfs_files(xenconsoled_t)
 
-term_create_pty(xenconsoled_t, xen_devpts_t)
-term_use_generic_ptys(xenconsoled_t)
 term_use_console(xenconsoled_t)
 
 init_use_fds(xenconsoled_t)
@@ -461,8 +459,6 @@ files_read_usr_files(xenstored_t)
 
 fs_search_xenfs(xenstored_t)
 fs_manage_xenfs_files(xenstored_t)
-
-term_use_generic_ptys(xenstored_t)
 
 init_use_fds(xenstored_t)
 init_use_script_ptys(xenstored_t)

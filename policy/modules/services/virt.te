@@ -156,6 +156,9 @@ init_script_file(virtd_initrc_exec_t)
 type virtd_keytab_t;
 files_type(virtd_keytab_t)
 
+type virtd_pty_t, virt_ptynode;
+term_pty(virtd_pty_t)
+
 ifdef(`enable_mcs',`
 	init_ranged_daemon_domain(virtd_t, virtd_exec_t, s0 - mcs_systemhigh)
 ')
@@ -325,9 +328,6 @@ storage_raw_write_removable_device(virt_domain)
 storage_raw_read_removable_device(virt_domain)
 
 term_use_all_terms(virt_domain)
-term_getattr_pty_fs(virt_domain)
-term_use_generic_ptys(virt_domain)
-term_use_ptmx(virt_domain)
 
 logging_send_syslog_msg(virt_domain)
 
@@ -534,6 +534,7 @@ allow virtd_t virt_image_type:chr_file relabel_chr_file_perms;
 allow virtd_t virt_image_type:sock_file manage_sock_file_perms;
 
 allow virtd_t virt_ptynode:chr_file rw_term_perms;
+term_create_pty(virtd_t, virtd_pty_t)
 
 manage_dirs_pattern(virtd_t, virt_tmp_t, virt_tmp_t)
 manage_files_pattern(virtd_t, virt_tmp_t, virt_tmp_t)
@@ -673,10 +674,6 @@ storage_manage_fixed_disk(virtd_t)
 storage_relabel_fixed_disk(virtd_t)
 storage_raw_write_removable_device(virtd_t)
 storage_raw_read_removable_device(virtd_t)
-
-term_getattr_pty_fs(virtd_t)
-term_use_generic_ptys(virtd_t)
-term_use_ptmx(virtd_t)
 
 auth_use_nsswitch(virtd_t)
 
@@ -1063,8 +1060,6 @@ selinux_compute_create_context(virtd_lxc_t)
 selinux_compute_relabel_context(virtd_lxc_t)
 selinux_compute_user_contexts(virtd_lxc_t)
 
-term_use_generic_ptys(virtd_lxc_t)
-term_use_ptmx(virtd_lxc_t)
 term_relabel_pty_fs(virtd_lxc_t)
 
 auth_use_nsswitch(virtd_lxc_t)

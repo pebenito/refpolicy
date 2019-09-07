@@ -88,6 +88,7 @@ allow pppd_t self:tcp_socket { accept listen };
 allow pppd_t self:packet_socket create_socket_perms;
 
 allow pppd_t pppd_devpts_t:chr_file { rw_chr_file_perms setattr_chr_file_perms };
+term_create_pty(pppd_t, pppd_devpts_t)
 
 allow pppd_t pppd_etc_t:dir rw_dir_perms;
 allow pppd_t { pppd_etc_t ppp_home_t }:file read_file_perms;
@@ -156,7 +157,6 @@ fs_search_auto_mountpoints(pppd_t)
 term_use_unallocated_ttys(pppd_t)
 term_setattr_unallocated_ttys(pppd_t)
 term_ioctl_generic_ptys(pppd_t)
-term_create_pty(pppd_t, pppd_devpts_t)
 term_use_generic_ptys(pppd_t)
 
 init_labeled_script_domtrans(pppd_t, pppd_initrc_exec_t)

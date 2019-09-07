@@ -15,6 +15,9 @@ init_script_file(l2tpd_initrc_exec_t)
 type l2tp_conf_t;
 files_config_file(l2tp_conf_t)
 
+type l2tpd_pty_t;
+term_pty(l2tpd_pty_t)
+
 type l2tpd_tmp_t;
 files_tmp_file(l2tpd_tmp_t)
 
@@ -37,6 +40,9 @@ allow l2tpd_t self:unix_dgram_socket sendto;
 allow l2tpd_t self:unix_stream_socket { accept listen };
 
 read_files_pattern(l2tpd_t, l2tp_conf_t, l2tp_conf_t)
+
+allow l2tpd_t l2tpd_pty_t:chr_file { rw_term_perms setattr };
+term_create_pty(l2tpd_t, l2tpd_pty_t)
 
 manage_dirs_pattern(l2tpd_t, l2tpd_var_run_t, l2tpd_var_run_t)
 manage_files_pattern(l2tpd_t, l2tpd_var_run_t, l2tpd_var_run_t)
@@ -76,10 +82,6 @@ corecmd_exec_bin(l2tpd_t)
 dev_read_urand(l2tpd_t)
 
 files_read_etc_files(l2tpd_t)
-
-term_setattr_generic_ptys(l2tpd_t)
-term_use_generic_ptys(l2tpd_t)
-term_use_ptmx(l2tpd_t)
 
 logging_send_syslog_msg(l2tpd_t)
 
